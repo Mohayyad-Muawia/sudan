@@ -9,7 +9,7 @@ require("dotenv").config()
 
 // keep the server awake
 const keepServerAwake = () => {
-  const serverUrl = `http://localhost:${port}`; 
+  const serverUrl = `https://sudan.onrender.com:${port}`; 
   setInterval(async () => {
     try {
       console.log(`keep the server awake ${serverUrl}`);
