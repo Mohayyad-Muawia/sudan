@@ -3,7 +3,22 @@ const cors = require("cors")
 const mongoose = require("mongoose")
 const morgan = require('morgan')
 const Vote = require("./Models/Vote")
+const axios = require('axios')
 require("dotenv").config()
+
+
+// keep the server awake
+const keepServerAwake = () => {
+  const serverUrl = `http://localhost:${port}`; 
+  setInterval(async () => {
+    try {
+      console.log(`keep the server awake ${serverUrl}`);
+      await axios.get(serverUrl);
+    } catch (error) {
+      console.error('Error while keeping the srever awake!', error.message);
+    }
+  }, 5 * 60 * 1000);
+};
 
 
 // midlewares
@@ -12,6 +27,10 @@ app.use(morgan('dev'))
 app.use(cors())
 
 // routes
+app.get('/', (req, res) => {
+  res.send("hello :)")
+})
+
 app.post("/api/vote", async (req, res) => {
     try {
       const vote = await Vote.findOneAndUpdate(
@@ -45,7 +64,7 @@ mongoose.connect(dbUrri)
 .then(() => {
     app.listen(port, () => {
         console.log(`Listening on port ${port}...`);
-        
+        keepServerAwake();
     })
 })
 .catch(err => {
